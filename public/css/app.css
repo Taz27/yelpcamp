@@ -1,0 +1,22 @@
+/* body {
+	background: lightblue;
+} */
+
+#formdiv {
+	width: 30%;
+	margin: 25px auto;
+}
+
+.gridfix {
+	display: flex;
+	flex-wrap: wrap;
+}
+/* div {
+	margin: 20px 0;
+} */
+
+/* img {
+	width: 500px;
+	height: auto;
+} */
+
