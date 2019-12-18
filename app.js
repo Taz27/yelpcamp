@@ -19,23 +19,18 @@ app.set("view engine", "ejs");
 //SETUP Campground Schema
 const campgroundSchema = new mongoose.Schema({
 	name: String,
-	image: String
+	image: String,
+	description: String
 });
 
-const campground = mongoose.model("Campground", campgroundSchema);
+const Campground = mongoose.model("Campground", campgroundSchema);
 
-// campground.insertMany([
-// 		{name: "Salmon Creek", image: "/images/dino-camp.jpg"},
-// 		{name: "Granite Hill", image: "/images/kevin-camp.jpg"},
-// 		{name: "Mountain Goat's Rest", image: "https://live.staticflickr.com/3714/20071979298_976c54bf23_z.jpg"}
-// ], (err, campgds) => {
-// 	if (err) {
-// 		console.log(err);
-// 	} else {
-// 		console.log("NEW CAMPGROUNDS ADDED!!");
-// 		console.log(campgds);
-// 	}
-// });
+// (async () => {
+// 	await Campground.updateOne({name: "Salmon Creek"}, {description: "This is Salmon Creek camp. Another Paradise!"});
+// 	await Campground.updateOne({name: "Granite Hill"}, {description: "This is a huge Granite Hill. Just Beautiful!"});
+// 	await Campground.updateOne({name: "Mountain Goat's Rest"}, {description: "This is hill that looks like a Goat's resting place."});
+// 	await Campground.updateOne({name: "Camp @Beach"}, {description: "This is an amazing camp at heavenly beach!!!"});
+// })();
 
 app.get("/", (req, res) => {
 	// console.log(__dirname);
@@ -45,21 +40,22 @@ app.get("/", (req, res) => {
 
 app.get("/campgrounds", (req, res) => {
 	//find campgrounds in database.
-	campground.find({}, (err, campgrounds) => {
+	Campground.find({}, (err, campgrounds) => {
 		if (err) {
 			console.log(err);
 		} else {
-			res.render("campgrounds", {campgrounds: campgrounds});
+			res.render("index", {campgrounds: campgrounds});
 		}
 	});
 });
 
 app.post("/campgrounds", (req, res) => {
-	//post route.
+	//post route. Add new CampG in database.
 	var name = req.body.name;
 	var image = req.body.image;
-	var newCampGround = {name: name, image: image};
-	campground.create(newCampGround, (err, newlyCreated) => {
+	var desc = req.body.description;
+	var newCampGround = {name: name, image: image, description: desc};
+	Campground.create(newCampGround, (err, newlyCreated) => {
 		if (err) {
 			console.log(err);
 		} else {
@@ -71,6 +67,17 @@ app.post("/campgrounds", (req, res) => {
 app.get("/campgrounds/new", (req, res) => {
 	//get 'add new' form.
 	res.render("new");
+});
+
+app.get("/campgrounds/:id", (req, res) => {
+	//find campground by ID and show.
+	Campground.findById(req.params.id, (err, foundCampG) => {
+		if (err) {
+			console.log(err);
+		} else {
+			res.render("show", {campground: foundCampG});
+		}
+	});
 });
 
 app.get("*", (req, res) => {
