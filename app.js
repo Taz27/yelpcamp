@@ -14,8 +14,8 @@ mongoose.connect("mongodb://localhost/yelp_camp_v3", {
 	useFindAndModify: false
 });
 
-app.use(express.static("public"));
-//app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 

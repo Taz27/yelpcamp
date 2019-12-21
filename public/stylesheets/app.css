@@ -1,0 +1,23 @@
+body {
+	background: mintcream;
+}
+
+.thumbnail img {
+	width: 100%;
+}
+
+#showPgThumbnail {
+	padding: 0;
+}
+
+#formdiv {
+	width: 30%;
+	margin: 25px auto;
+}
+
+.gridfix {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
