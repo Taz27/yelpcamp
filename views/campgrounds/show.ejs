@@ -1,10 +1,12 @@
-<%- include("partials/header") %>
+<%- include("../partials/header") %>
 
 <h1><%= campground.name %></h1>
 
 <img src="<%= campground.image %>">
 
 <p><%= campground.description %></p>
+
+<a id="addcommentbtn" class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
 
 <% for (let comment of campground.comments) { %> 
 		<p>
@@ -13,4 +15,4 @@
 <% } %>
 
 
-<%- include("partials/footer") %>
+<%- include("../partials/footer") %>

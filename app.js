@@ -41,7 +41,7 @@ app.get("/campgrounds", (req, res) => {
 		if (err) {
 			console.log(err);
 		} else {
-			res.render("index", {campgrounds: campgrounds});
+			res.render("campgrounds/index", {campgrounds: campgrounds});
 		}
 	});
 });
@@ -63,7 +63,7 @@ app.post("/campgrounds", (req, res) => {
 
 app.get("/campgrounds/new", (req, res) => {
 	//get 'add new' form.
-	res.render("new");
+	res.render("campgrounds/new");
 });
 
 app.get("/campgrounds/:id", (req, res) => {
@@ -73,10 +73,46 @@ app.get("/campgrounds/:id", (req, res) => {
 			console.log(err);
 		} else {
 			//console.log(foundCampG);
-			res.render("show", {campground: foundCampG});
+			res.render("campgrounds/show", {campground: foundCampG});
 		}
 	});
 });
+
+//--------------
+//Comments Routes
+//--------------
+app.get("/campgrounds/:id/comments/new", (req, res) => {
+	//render add comment form.
+	Campground.findById(req.params.id, (err, foundCampG) => {
+		if (err) {
+			console.log(err);
+		} else {
+			res.render("comments/new", {campground: foundCampG});
+		}
+	});
+});
+
+app.post("/campgrounds/:id/comments", (req, res) => {
+	//find campground by ID. Create new comment. Connect it to Campground then redirect.
+	Campground.findById(req.params.id, (err, foundCampG) => {
+		if (err) {
+			console.log(err);
+			res.redirect("/campgrounds");
+		} else {
+			Comment.create(req.body.comment, (err, comment) => {
+				if (err) {
+					console.log(err);
+				} else {
+					foundCampG.comments.push(comment);
+					foundCampG.save();
+					console.log("SUCCESS: comment added to CG")
+					res.redirect(`/campgrounds/${foundCampG._id}`);
+				}
+			});
+		}
+	});
+});
+
 
 app.get("*", (req, res) => {
 	res.status(404).send("Sorry, page not found! Error Code: 404");

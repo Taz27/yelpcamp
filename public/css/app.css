@@ -11,6 +11,10 @@
 	display: flex;
 	flex-wrap: wrap;
 }
+
+#addcommentbtn {
+	margin-bottom: 10px;
+}
 /* div {
 	margin: 20px 0;
 } */
