@@ -2,9 +2,12 @@ const express = require("express"),
 	  app = express(),
 	  bodyParser = require("body-parser"),
 	  path = require("path"),
-	  mongoose = require("mongoose");
+	  mongoose = require("mongoose"),
+	  Comment = require("./models/comment"),
+	  Campground = require("./models/campground"),
+	  seedDB = require("./seeds");
 
-mongoose.connect("mongodb://localhost/yelp_camp", {
+mongoose.connect("mongodb://localhost/yelp_camp_v3", {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
@@ -16,14 +19,8 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-//SETUP Campground Schema
-const campgroundSchema = new mongoose.Schema({
-	name: String,
-	image: String,
-	description: String
-});
-
-const Campground = mongoose.model("Campground", campgroundSchema);
+//Seed the database.
+//seedDB();
 
 // (async () => {
 // 	await Campground.updateOne({name: "Salmon Creek"}, {description: "This is Salmon Creek camp. Another Paradise!"});
@@ -71,10 +68,11 @@ app.get("/campgrounds/new", (req, res) => {
 
 app.get("/campgrounds/:id", (req, res) => {
 	//find campground by ID and show.
-	Campground.findById(req.params.id, (err, foundCampG) => {
+	Campground.findById(req.params.id).populate("comments").exec((err, foundCampG) => {
 		if (err) {
 			console.log(err);
 		} else {
+			//console.log(foundCampG);
 			res.render("show", {campground: foundCampG});
 		}
 	});
