@@ -25,46 +25,34 @@ var seeds = [
 async function seedDB() {
 	try {
 		//Remove all campgrounds
-		await Campground.deleteMany({});
-		console.log("campgrounds removed!");
-
-		await Comment.deleteMany({});
-		console.log("comments removed!");
-
-		 //add a few campgrounds
+    await Campground.remove({});
+    console.log("campgrounds removed!");
+        
+    await Comment.remove({});
+    console.log("comments removed!");
+	
+		//add a few campgrounds
 		for (const seed of seeds) {
 
-			let campground = await Campground.create(seed); 
-			console.log("campground created!");
-			//create a comment
-			let comment1 = await Comment.create(
-				{
-					text: "This place is great, but I wish there was internet",
-					author: "Homer"
-				}
-			);
-			console.log("First comment created!");
-			campground.comments.push(comment1);
-			campground.save();
-			console.log("Comment added to campground!");
-			
-			//ADD ANOTHER Comment
-			//create a comment
-			let comment2 = await Comment.create(
-				{
-					text: "This place is AWESOME...Perfect for having chilled Beers :)",
-					author: "Singh"
-				}
-			);
-			console.log("Another comment created!");
-			campground.comments.push(comment2);
-			campground.save();
-			console.log("Another Comment added to campground!");
+		let campground = await Campground.create(seed); 
+		console.log("campground created!");
+		//create a comment
+		let comment = await Comment.create(
+			{
+		text: "This place is great, but I wish there was internet",
+		author: "Homer"
 		}
-		//add a few comments
-	} catch(err) {
-		console.log("OH NOO Got Error: " + err.message);
-	} 
+		);
+		console.log("comment created!");
+		campground.comments.push(comment);
+		campground.save();
+		console.log("Comment added to campground!");
+		
+		//add a few  more comments
+		}
+	} catch (err) {
+		console.log("OH NOO! Got Error: " + err.message);
+	}
    
 }
 

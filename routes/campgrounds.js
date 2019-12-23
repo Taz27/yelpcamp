@@ -16,12 +16,16 @@ router.get("/campgrounds", (req, res) => {
 });
 
 //CREATE route
-router.post("/campgrounds", (req, res) => {
+router.post("/campgrounds", isLoggedIn, (req, res) => {
 	//post route. Add new CampG in database.
 	var name = req.body.name;
 	var image = req.body.image;
 	var desc = req.body.description;
-	var newCampGround = {name: name, image: image, description: desc};
+	var author = {
+		id: req.user._id,
+		username: req.user.username
+	}
+	var newCampGround = {name: name, image: image, description: desc, author: author};
 	Campground.create(newCampGround, (err, newlyCreated) => {
 		if (err) {
 			console.log(err);
@@ -32,7 +36,7 @@ router.post("/campgrounds", (req, res) => {
 });
 
 //NEW FORM ROUTE
-router.get("/campgrounds/new", (req, res) => {
+router.get("/campgrounds/new", isLoggedIn, (req, res) => {
 	//get 'add new' form.
 	res.render("campgrounds/new");
 });
@@ -49,5 +53,18 @@ router.get("/campgrounds/:id", (req, res) => {
 		}
 	});
 });
+
+//own middleware function
+function isLoggedIn(req, res, next) {
+	//check if user is logged in
+	//if yes, run the callback function of route (which is next)
+	//else redirect to login page.
+	if (req.isAuthenticated()) {
+        next();
+    } else {
+		res.redirect("/login");
+	}
+		
+}
 
 module.exports = router;
