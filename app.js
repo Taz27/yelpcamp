@@ -8,6 +8,8 @@ const express 	=  require("express"),
 	  Campground = require("./models/campground"),
 	  User =       require("./models/user"),
 	  seedDB =     require("./seeds"),
+	  methodOverride = require("method-override"),
+	  expressSanitizer = require("express-sanitizer"),
       LocalStrategy = require("passport-local"),
       passportLocalMongoose = require("passport-local-mongoose");
 
@@ -31,6 +33,8 @@ mongoose.connect("mongodb://localhost/yelp_camp_v9", {
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride("_method"));
+app.use(expressSanitizer());
 
 //Configure PASSPORT
 app.use(require("express-session")({
