@@ -10,8 +10,10 @@ const express    = require("express"),
 router.get("/campgrounds/:id/comments/new", middleware.isLoggedIn, (req, res) => {
 	//render add comment form.
 	Campground.findById(req.params.id, (err, foundCampG) => {
-		if (err) {
+		if (err || !foundCampG) {
 			console.log(err);
+			req.flash("error", "Campground not found!");
+            res.redirect("back");
 		} else {
 			res.render("comments/new", {campground: foundCampG});
 		}
@@ -22,8 +24,9 @@ router.get("/campgrounds/:id/comments/new", middleware.isLoggedIn, (req, res) =>
 router.post("/campgrounds/:id/comments", middleware.isLoggedIn, (req, res) => {
 	//find campground by ID. Create new comment. Connect it to Campground then redirect.
 	Campground.findById(req.params.id, (err, foundCampG) => {
-		if (err) {
+		if (err || !foundCampG) {
 			console.log(err);
+			req.flash("error", "Something went wrong!");
 			res.redirect("/campgrounds");
 		} else {
 			Comment.create(req.body.comment, (err, comment) => {
@@ -38,6 +41,7 @@ router.post("/campgrounds/:id/comments", middleware.isLoggedIn, (req, res) => {
 					foundCampG.comments.push(comment);
 					foundCampG.save();
 					console.log("SUCCESS: comment added to CG")
+					req.flash("success", "Successfully added comment!");
 					res.redirect(`/campgrounds/${foundCampG._id}`);
 				}
 			});
@@ -75,6 +79,7 @@ router.delete("/campgrounds/:id/comments/:comment_id", middleware.checkCommentOw
 		if (err) {
 			res.redirect("back");
 		} else {
+			req.flash("success", "Comment Deleted!");
 			console.log("SUCCESS: Comment Deleted!");
 			res.redirect("/campgrounds/"  + req.params.id);	
 		}

@@ -8,6 +8,8 @@ const express 	=  require("express"),
 	  Campground = require("./models/campground"),
 	  User =       require("./models/user"),
 	  seedDB =     require("./seeds"),
+	  session =    require("express-session"),
+	  flash =      require("connect-flash"),
 	  methodOverride = require("method-override"),
 	  expressSanitizer = require("express-sanitizer"),
       LocalStrategy = require("passport-local"),
@@ -17,8 +19,10 @@ const commentRoutes =    require("./routes/comments"),
 	  campgroundRoutes = require("./routes/campgrounds"),
 	  indexRoutes =      require("./routes/index");
 
+const PORT = process.env.PORT || 3000;
 
-mongoose.connect("mongodb://localhost/yelp_camp_v9", {
+
+mongoose.connect("mongodb://localhost/yelp_camp_v11", {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
@@ -35,9 +39,10 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
+app.use(flash());
 
 //Configure PASSPORT
-app.use(require("express-session")({
+app.use(session({
 	secret: "Kiara is the best and cutest baby in the world!",
 	resave: false,
 	saveUninitialized: false
@@ -53,6 +58,8 @@ passport.deserializeUser(User.deserializeUser());
 //middleware to make Current User details available on every route/ejs file.
 app.use((req, res, next) => {
 	res.locals.currentUser = req.user;
+	res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
 	next();
 });
 
@@ -72,4 +79,4 @@ app.get("*", (req, res) => {
 	res.status(404).send("Sorry, page not found! Error Code: 404");
 });
 
-app.listen(3000, () => console.log("YelpCamp server has started!"));
+app.listen(PORT, () => console.log("YelpCamp server has started!"));

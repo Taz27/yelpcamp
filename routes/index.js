@@ -29,6 +29,7 @@ router.post("/register", (req, res) => {
 	//it will create SALT and HASH properties and add to user document rather than saving the password.
 	User.register(newUser, req.body.password, (err, user) => {
 		if (err) {
+			req.flash("error", err.message);
 			return res.redirect("/register");
 		}
 		//authenticate the user by executing passport.authenticate method by 'passport.js' package 
@@ -42,6 +43,7 @@ router.post("/register", (req, res) => {
 			
 			//console.log(req.session);
 			//console.log(user);
+			req.flash("success", "Welcome to YelpCamp, " + user.username);
 			res.redirect("/campgrounds"); //show campgrounds after log in.
 		});
 	});
@@ -64,27 +66,18 @@ router.get("/login", (req, res) => {
 //then on success, redirect to show campgrounds and on failure, redirect to login page.
 router.post("/login", passport.authenticate("local", {
 	successRedirect: "/campgrounds",
-	failureRedirect: "/login"
+	failureRedirect: "/login",
+	failureFlash: true,
+	successFlash: "Welcome to YelpCamp!"
 }), (req, res) => {});
 
 //log out
 //just use the logout method attached to req (request) object.
 router.get("/logout", (req, res) => {
 	req.logout();
+	req.flash("success", "logged you out!");
 	res.redirect("/");
 });
 
-//own middleware function
-function isLoggedIn(req, res, next) {
-	//check if user is logged in
-	//if yes, run the callback function of route (which is next)
-	//else redirect to login page.
-	if (req.isAuthenticated()) {
-        next();
-    } else {
-		res.redirect("/login");
-	}
-		
-}
 
 module.exports = router;
