@@ -19,10 +19,13 @@ const commentRoutes =    require("./routes/comments"),
 	  campgroundRoutes = require("./routes/campgrounds"),
 	  indexRoutes =      require("./routes/index");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000,
+	  DB_URL = process.env.DATABASE_URL || "mongodb://localhost/yelp_camp_v12";
 
+//MongoDB ATLAS url (to use at Heroku)
+//const DB_URL_ATLAS = "mongodb+srv://taran:Coco1981@cluster-taz-8vczy.mongodb.net/yelp_camp?retryWrites=true&w=majority";
 
-mongoose.connect("mongodb://localhost/yelp_camp_v12", {
+mongoose.connect(DB_URL, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
@@ -80,4 +83,4 @@ app.get("*", (req, res) => {
 	res.status(404).send("Sorry, page not found! Error Code: 404");
 });
 
-app.listen(PORT, () => console.log("YelpCamp server has started!"));
+app.listen(PORT, process.env.IP, () => console.log("YelpCamp server has started!"));
