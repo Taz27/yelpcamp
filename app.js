@@ -22,7 +22,7 @@ const commentRoutes =    require("./routes/comments"),
 const PORT = process.env.PORT || 3000;
 
 
-mongoose.connect("mongodb://localhost/yelp_camp_v11", {
+mongoose.connect("mongodb://localhost/yelp_camp_v12", {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
@@ -40,6 +40,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
 app.use(flash());
+app.locals.moment = require("moment");
 
 //Configure PASSPORT
 app.use(session({

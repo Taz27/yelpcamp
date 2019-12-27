@@ -24,3 +24,8 @@ body {
     display: inline;
 }
 
+#codedby {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+}

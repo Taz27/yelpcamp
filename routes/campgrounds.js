@@ -19,14 +19,15 @@ router.get("/campgrounds", (req, res) => {
 //CREATE route
 router.post("/campgrounds", middleware.isLoggedIn, (req, res) => {
 	//post route. Add new CampG in database.
-	var name = req.body.name;
+	var name = req.sanitize(req.body.name);
+	var price = req.body.price;
 	var image = req.body.image;
-	var desc = req.body.description;
+	var desc = req.sanitize(req.body.description);
 	var author = {
 		id: req.user._id,
 		username: req.user.username
 	}
-	var newCampGround = {name: name, image: image, description: desc, author: author};
+	var newCampGround = {name: name, price: price, image: image, description: desc, author: author};
 	Campground.create(newCampGround, (err, newlyCreated) => {
 		if (err) {
 			console.log(err);
