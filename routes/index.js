@@ -30,7 +30,7 @@ router.post("/register", (req, res) => {
 	User.register(newUser, req.body.password, (err, user) => {
 		if (err) {
 			req.flash("error", err.message);
-			return res.redirect("/register");
+			return res.redirect("/dev/register");
 		}
 		//authenticate the user by executing passport.authenticate method by 'passport.js' package 
 		//using the 'authenticate' method provided by 'passport-local-mongoose' plug-in on User model.
@@ -44,7 +44,7 @@ router.post("/register", (req, res) => {
 			//console.log(req.session);
 			//console.log(user);
 			req.flash("success", "Welcome to YelpCamp, " + user.username);
-			res.redirect("/campgrounds"); //show campgrounds after log in.
+			res.redirect("/dev/campgrounds"); //show campgrounds after log in.
 		});
 	});
 });
@@ -65,8 +65,8 @@ router.get("/login", (req, res) => {
 //and check if it matches with entered password)
 //then on success, redirect to show campgrounds and on failure, redirect to login page.
 router.post("/login", passport.authenticate("local", {
-	successRedirect: "/campgrounds",
-	failureRedirect: "/login",
+	successRedirect: "/dev/campgrounds",
+	failureRedirect: "/dev/login",
 	failureFlash: true,
 	successFlash: "Welcome to YelpCamp!"
 }), (req, res) => {});
@@ -76,7 +76,7 @@ router.post("/login", passport.authenticate("local", {
 router.get("/logout", (req, res) => {
 	req.logout();
 	req.flash("success", "logged you out!");
-	res.redirect("/");
+	res.redirect("/dev");
 });
 
 
