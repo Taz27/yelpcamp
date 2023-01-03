@@ -1,0 +1,27 @@
+# serverless.yml
+
+service: serverless-yelpcamp-nodejs-app
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 128
+  stage: dev
+  region: ap-southeast-2
+  iamManagedPolicies:
+    - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  environment:
+    DATABASE_URL: 'mongodb+srv://taran:Coco1981@cluster-taz-8vczy.mongodb.net/yelp_camp?retryWrites=true&w=majority'
+
+functions:
+  app:
+    handler: app.handler # reference the file and exported method
+    events: # events trigger lambda functions
+      - http: # this is an API Gateway HTTP event trigger
+          path: /
+          method: ANY
+          cors: true
+      - http: # all routes get proxied to the Express router
+          path: /{proxy+}
+          method: ANY
+          cors: true
