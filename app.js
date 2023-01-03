@@ -23,9 +23,6 @@ const commentRoutes = require('./routes/comments'),
 const PORT = process.env.PORT || 3000,
   DB_URL = process.env.DATABASE_URL;
 
-//MongoDB ATLAS url (to use at Heroku)
-//const DB_URL_ATLAS = "mongodb+srv://taran:Coco1981@cluster-taz-8vczy.mongodb.net/yelp_camp?retryWrites=true&w=majority";
-
 async function connectToMongoDb() {
   try {
     await mongoose.connect(DB_URL, {
