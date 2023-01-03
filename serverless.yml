@@ -6,12 +6,14 @@ provider:
   name: aws
   runtime: nodejs16.x
   memorySize: 128
+  timeout: 30
   stage: dev
   region: ap-southeast-2
   iamManagedPolicies:
     - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
   environment:
     DATABASE_URL: 'mongodb+srv://taran:Coco1981@cluster-taz-8vczy.mongodb.net/yelp_camp?retryWrites=true&w=majority'
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 functions:
   app:
